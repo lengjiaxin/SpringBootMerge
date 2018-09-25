@@ -1,6 +1,6 @@
-# bigDataService
+# SpringBootMerge
 
-安博会大数据展示后台接口
+SpringBoot+MySql+Redis+Swagger+Mybatis+Druid
 1. 使用IntelliJ IDEA菜单建立本地Git仓库: VCS -> Import into Version Control -> Create Git Repository；
 2. 在弹出的的窗口中选择当前项目；
 3. 提交全部需要管理的文件到新建立的本地仓库master分支；

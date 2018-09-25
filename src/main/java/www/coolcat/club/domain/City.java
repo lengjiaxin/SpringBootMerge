@@ -1,5 +1,11 @@
 package www.coolcat.club.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.io.Serializable;
+
 /***
    *@autohr Lengjx
    *@Description 城市实体类 
@@ -7,7 +13,10 @@ package www.coolcat.club.domain;
    *@Param 
    *@return  
 **/
-public class City {
+@Getter
+@Setter
+@ToString
+public class City implements Serializable {
 
     /**
      * 城市编号
@@ -28,36 +37,4 @@ public class City {
      * 描述
      */
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getProvinceId() {
-        return provinceId;
-    }
-
-    public void setProvinceId(Long provinceId) {
-        this.provinceId = provinceId;
-    }
-
-    public String getCityName() {
-        return cityName;
-    }
-
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

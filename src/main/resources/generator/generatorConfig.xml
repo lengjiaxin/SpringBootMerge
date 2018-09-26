@@ -88,7 +88,7 @@
             targetPackage：生成的类要放的包，真实的包受enableSubPackages属性控制；
             targetProject：目标项目，指定一个存在的目录下，生成的内容会放到指定目录中，如果目录不存在，MBG不会自动建目录
          -->
-        <javaModelGenerator targetPackage="www.coolcat.club.domain" targetProject="F:\AworkTime\bigdatashow\src\main\java">
+        <javaModelGenerator targetPackage="www.coolcat.club.domain" targetProject="F:\AworkTime\SpringBootMerge\src\main\java">
             <!--  for MyBatis3/MyBatis3Simple
                              自动为每一个生成的类创建一个构造方法，构造方法包含了所有的field；而不是使用setter；
             <property name="constructorBased" value="false"/>
@@ -117,12 +117,12 @@
 
 
         <!--对应的mapper.xml文件  -->
-        <sqlMapGenerator targetPackage="mapper" targetProject="F:\AworkTime\bigdatashow\src\main\resources">
+        <sqlMapGenerator targetPackage="mapper" targetProject="F:\AworkTime\SpringBootMerge\src\main\resources">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
         <!-- 对应的Mapper接口类文件 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="www.coolcat.club.dao" targetProject="F:\AworkTime\bigdatashow\src\main\java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="www.coolcat.club.dao" targetProject="F:\AworkTime\SpringBootMerge\src\main\java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
@@ -146,13 +146,13 @@
             15，delimitAllColumns：设置是否所有生成的SQL中的列名都使用标识符引起来。默认为false，delimitIdentifiers参考context的属性
 
          -->
-        <table tableName="bigdata_type" domainObjectName="dataType"
+        <table tableName="permission" domainObjectName="Permission"
                enableCountByExample="true" enableUpdateByExample="true"
                enableDeleteByExample="true" enableSelectByExample="true"
                selectByExampleQueryId="true">
             <!-- 如果设置为true，生成的model类会直接使用column本身的名字，而不会再使用驼峰命名方法，
                比如BORN_DATE，生成的属性名字就是BORN_DATE,而不会是bornDate -->
-            <property name="useActualColumnNames" value="true" />
+            <property name="useActualColumnNames" value="false" />
         </table>
     </context>
 </generatorConfiguration>

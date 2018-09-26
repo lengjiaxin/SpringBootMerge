@@ -1,4 +1,4 @@
-package www.coolcat.club.service;
+package www.coolcat.club.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * @Version 1.0
  **/
 @Service
-public class RedisService {
+public class RedisServiceImpl {
     @Autowired
     private RedisTemplate redisTemplate;
 

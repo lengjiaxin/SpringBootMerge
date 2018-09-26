@@ -1,4 +1,4 @@
-package www.coolcat.club.domain;
+package www.coolcat.club.config;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -9,6 +9,8 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import www.coolcat.club.domain.User;
 
 /**
  * @ClassName MyShiroRealm
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @Date 2018-09-25 15:13
  * @Version 1.0
  **/
+@Configuration
 public class MyShiroRealm extends AuthorizingRealm {
 
     //用于用户查询

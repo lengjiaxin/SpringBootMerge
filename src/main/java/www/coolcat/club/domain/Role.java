@@ -21,5 +21,5 @@ import java.util.List;
 public class Role implements Serializable {
     private Long id;
     private String roleName;
-    private User user;
+    private Long user_id;
 }

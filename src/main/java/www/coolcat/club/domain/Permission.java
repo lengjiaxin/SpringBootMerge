@@ -21,5 +21,6 @@ public class Permission implements Serializable {
 
     private Long id;
     private String permission;
+    private Long role_id;
 
 }

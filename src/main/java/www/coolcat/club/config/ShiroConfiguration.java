@@ -5,7 +5,7 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.springframework.context.annotation.Bean;
-import www.coolcat.club.domain.MyShiroRealm;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +17,7 @@ import java.util.Map;
  * @Date 2018-09-25 15:11
  * @Version 1.0
  **/
+@Configuration
 public class ShiroConfiguration {
     //将自己的验证方式加入容器
     @Bean

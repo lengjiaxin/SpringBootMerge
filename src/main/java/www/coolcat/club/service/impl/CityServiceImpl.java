@@ -4,10 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import www.coolcat.club.dao.CityDao;
 import www.coolcat.club.domain.City;
 import www.coolcat.club.service.CityService;
-import www.coolcat.club.service.RedisService;
 
 /***
    *@autohr Lengjx
@@ -17,13 +17,14 @@ import www.coolcat.club.service.RedisService;
    *@return  
 **/
 @Service
+@Transactional
 public class CityServiceImpl implements CityService {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(CityServiceImpl.class);
     @Autowired
     private CityDao cityDao;
     @Autowired
-    private RedisService redisService;
+    private RedisServiceImpl redisService;
     /**
      * 获取城市逻辑：
      * 如果缓存存在，从缓存中获取城市信息

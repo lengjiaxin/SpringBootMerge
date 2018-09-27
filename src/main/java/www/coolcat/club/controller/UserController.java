@@ -35,11 +35,6 @@ public class UserController {
         return "index";
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public String toLogin() {
-        return "login";
-    }
-
     @ApiOperation(value="获取用户详细信息", notes="根据url的username来获取用户详细信息")
     @RequestMapping(value = "/admin", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public User admin(@PathVariable("username") String username) {

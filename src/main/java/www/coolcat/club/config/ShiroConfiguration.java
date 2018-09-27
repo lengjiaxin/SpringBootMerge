@@ -1,13 +1,15 @@
 package www.coolcat.club.config;
 
-import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import www.coolcat.club.shiro.MyAuthorizingRealm;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -19,46 +21,60 @@ import java.util.Map;
  **/
 @Configuration
 public class ShiroConfiguration {
-    //将自己的验证方式加入容器
-    @Bean
-    public MyShiroRealm myShiroRealm() {
-        MyShiroRealm myShiroRealm = new MyShiroRealm();
-        return myShiroRealm;
-    }
 
-    //权限管理，配置主要是Realm的管理认证
-    @Bean
-    public DefaultWebSecurityManager securityManager() {
-        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(myShiroRealm());
-        return securityManager;
-    }
+    private static final Logger log = LoggerFactory.getLogger(ShiroConfiguration.class);
 
-    //Filter工厂，设置对应的过滤条件和跳转条件
+    /**
+     * 过滤器默认权限表 {anon=anon, authc=authc, authcBasic=authcBasic, logout=logout,
+     * noSessionCreation=noSessionCreation, perms=perms, port=port,
+     * rest=rest, roles=roles, ssl=ssl, user=user}
+     * <p>
+     * anon, authc, authcBasic, user 是第一组认证过滤器
+     * perms, port, rest, roles, ssl 是第二组授权过滤器
+     * <p>
+     * user 和 authc 的不同：当应用开启了rememberMe时, 用户下次访问时可以是一个user, 但绝不会是authc,
+     * 因为authc是需要重新认证的, user表示用户不一定已通过认证, 只要曾被Shiro记住过登录状态的用户就可以正常发起请求,比如rememberMe
+     * 以前的一个用户登录时开启了rememberMe, 然后他关闭浏览器, 下次再访问时他就是一个user, 而不会authc
+     *
+     * @param securityManager 初始化 ShiroFilterFactoryBean 的时候需要注入 SecurityManager
+     */
     @Bean
-    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
+    public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+        // 必须设置 SecurityManager
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        Map<String,String> map = new HashMap<String, String>();
-        //登出
-        map.put("/logout","logout");
-        //对所有用户认证
-        map.put("/**","authc");
-        //登录
-        shiroFilterFactoryBean.setLoginUrl("/login");
-        //首页
-        shiroFilterFactoryBean.setSuccessUrl("/index");
-        //错误页面，认证不通过跳转
-        shiroFilterFactoryBean.setUnauthorizedUrl("/error");
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
+        // setLoginUrl 如果不设置值，默认会自动寻找Web工程根目录下的"/login.jsp"页面 或 "/login" 映射
+        shiroFilterFactoryBean.setLoginUrl("/notLogin");
+        // 设置无权限时跳转的 url;
+        shiroFilterFactoryBean.setUnauthorizedUrl("/notRole");
+
+        // 设置拦截器
+        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
+        //游客，开发权限
+        filterChainDefinitionMap.put("/guest/**", "anon");
+        //用户，需要角色权限 “user”
+        filterChainDefinitionMap.put("/user/**", "roles[user]");
+        //管理员，需要角色权限 “admin”
+        filterChainDefinitionMap.put("/admin/**", "roles[admin]");
+        //开放登陆接口
+        filterChainDefinitionMap.put("/login", "anon");
+        //其余接口一律拦截
+        //主要这行代码必须放在所有权限设置的最后，不然会导致所有 url 都被拦截
+        filterChainDefinitionMap.put("/**", "authc");
+
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+        System.out.println("Shiro拦截器工厂类注入成功");
         return shiroFilterFactoryBean;
     }
 
-    //加入注解的使用，不加入这个注解不生效
+    /**
+     * 注入 securityManager
+     */
     @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
-        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
-        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
-        return authorizationAttributeSourceAdvisor;
+    public SecurityManager securityManager(MyAuthorizingRealm customRealm) {
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        // 设置realm.
+        securityManager.setRealm(customRealm);
+        return securityManager;
     }
 }

@@ -7,8 +7,7 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import www.coolcat.club.domain.User;
+import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,10 +1,14 @@
 package www.coolcat.club.config;
 
+import org.apache.shiro.codec.Base64;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import www.coolcat.club.shiro.MyAuthorizingRealm;
@@ -39,7 +43,7 @@ public class ShiroConfiguration {
      * @param securityManager 初始化 ShiroFilterFactoryBean 的时候需要注入 SecurityManager
      */
     @Bean
-    public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
+    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         // 必须设置 SecurityManager
         shiroFilterFactoryBean.setSecurityManager(securityManager);
@@ -58,6 +62,16 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/admin/**", "roles[admin]");
         //开放登陆接口
         filterChainDefinitionMap.put("/login", "anon");
+        //放行静态资源
+        filterChainDefinitionMap.put("/static/**", "anon");
+        //放行swagger
+        filterChainDefinitionMap.put("/swagger-ui.html","anon");
+        filterChainDefinitionMap.put("/swagger/**","anon");
+        filterChainDefinitionMap.put("/webjars/**", "anon");
+        filterChainDefinitionMap.put("/swagger-resources/**","anon");
+        filterChainDefinitionMap.put("/v2/**","anon");
+        filterChainDefinitionMap.put("/druid/**","anon");
+
         //其余接口一律拦截
         //主要这行代码必须放在所有权限设置的最后，不然会导致所有 url 都被拦截
         filterChainDefinitionMap.put("/**", "authc");
@@ -73,8 +87,41 @@ public class ShiroConfiguration {
     @Bean
     public SecurityManager securityManager(MyAuthorizingRealm customRealm) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        // 设置realm.
-        securityManager.setRealm(customRealm);
+        // 设置realm
+        securityManager.setRealm(myShiroRealm());
+        //注入记住我管理器
+        securityManager.setRememberMeManager(rememberMeManager());
         return securityManager;
     }
+    /**
+     * 生成 MyAuthorizingRealm
+     */
+    @Bean
+    public MyAuthorizingRealm myShiroRealm(){
+        return new MyAuthorizingRealm();
+    }
+    /**
+     * cookie对象;
+     * @return
+     */
+    public SimpleCookie rememberMeCookie(){
+        //这个参数是cookie的名称，对应前端的checkbox的name = rememberMe
+        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+        //<!-- 记住我cookie生效时间30天 ,单位秒;-->
+        simpleCookie.setMaxAge(2592000);
+        return simpleCookie;
+    }
+
+    /**
+     * cookie管理对象;记住我功能
+     * @return
+     */
+    public CookieRememberMeManager rememberMeManager(){
+        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        cookieRememberMeManager.setCookie(rememberMeCookie());
+        //rememberMe cookie加密的密钥 建议每个项目都不一样 默认AES算法 密钥长度(128 256 512 位)
+        cookieRememberMeManager.setCipherKey(Base64.decode("3AvVhmFLUs0KTA3Kprskaizedag=="));
+        return cookieRememberMeManager;
+    }
+
 }

@@ -23,9 +23,9 @@ import www.coolcat.club.service.UserService;
  * @Version 1.0
  **/
 @RestController
-public class UserController {
+public class UserRestController {
 
-    private static Logger log = Logger.getLogger(UserController.class);
+    private static Logger log = Logger.getLogger(UserRestController.class);
 
     @Autowired
     private UserService userService;

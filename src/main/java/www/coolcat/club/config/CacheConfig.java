@@ -34,8 +34,6 @@ import java.util.Arrays;
 @Configuration
 @EnableCaching
 public class CacheConfig extends CachingConfigurerSupport {
-
-
     @SuppressWarnings("rawtypes")
     @Bean
     public CacheManager cacheManager(RedisTemplate redisTemplate) {

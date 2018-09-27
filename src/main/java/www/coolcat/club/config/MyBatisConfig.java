@@ -1,5 +1,6 @@
 package www.coolcat.club.config;
 
+import com.github.pagehelper.PageHelper;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -21,22 +22,23 @@ public class MyBatisConfig {
     @Autowired
     private DruidConfiguration druidConfig;
 
+    //配置mybatis的分页插件pageHelper
+    @Bean
+    public PageHelper pageHelper(){
+        PageHelper pageHelper = new PageHelper();
+        Properties properties = new Properties();
+        properties.setProperty("offsetAsPageNum","true");
+        properties.setProperty("rowBoundsWithCount","true");
+        properties.setProperty("reasonable","true");
+        properties.setProperty("dialect","mysql");    //配置mysql数据库的方言
+        pageHelper.setProperties(properties);
+        return pageHelper;
+    }
     @Bean
     public SqlSessionFactory sqlSessionFactoryBean() throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(druidConfig.mysqlDataSource());
         sqlSessionFactoryBean.setTypeAliasesPackage("www.coolcat.club");
-
-     /*   //分页插件
-        PagePlugin pagePlugin = new PagePlugin();
-        Properties properties = new Properties();
-        properties.setProperty("dialect", "mysql");
-        properties.setProperty("pageSqlId", ".*query.*");
-        pagePlugin.setProperties(properties);
-
-        //添加插件
-        sqlSessionFactoryBean.setPlugins(new Interceptor[]{pagePlugin});*/
-
         //添加XML目录
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         try {

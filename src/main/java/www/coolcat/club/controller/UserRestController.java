@@ -1,5 +1,6 @@
 package www.coolcat.club.controller;
 
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -8,10 +9,7 @@ import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import www.coolcat.club.domain.User;
 import www.coolcat.club.service.UserService;
 
@@ -36,8 +34,9 @@ public class UserRestController {
     }
 
     @ApiOperation(value="获取用户详细信息", notes="根据url的username来获取用户详细信息")
-    @RequestMapping(value = "/admin", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public User admin(@PathVariable("username") String username) {
+    @ApiImplicitParam(name = "username", value = "username", required = true, dataType = "String",paramType = "path")
+    @RequestMapping(value = "/admin", method = RequestMethod.POST)
+    public User admin(@RequestParam("username") String username) {
         return userService.getUserByUserName(username);
     }
 

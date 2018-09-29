@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import www.coolcat.club.shiro.MyAuthorizingRealm;
 
 import java.util.LinkedHashMap;
@@ -23,7 +24,6 @@ import java.util.Map;
  * @Date 2018-09-25 15:11
  * @Version 1.0
  **/
-@Configuration
 public class ShiroConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(ShiroConfiguration.class);

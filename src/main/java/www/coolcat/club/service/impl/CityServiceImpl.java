@@ -40,7 +40,6 @@ public class CityServiceImpl implements CityService {
             City city = cityDao.findById(id);
             redisService.set("city_"+id, city);
             return city;
-
         }
     }
 

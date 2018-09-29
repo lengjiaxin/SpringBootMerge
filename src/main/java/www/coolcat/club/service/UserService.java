@@ -1,6 +1,9 @@
 package www.coolcat.club.service;
 
+import com.github.pagehelper.PageInfo;
 import www.coolcat.club.domain.User;
+
+import java.util.List;
 
 /**
  * @ClassName UserService
@@ -18,5 +21,15 @@ public interface UserService {
        *@return www.coolcat.club.domain.User 
     **/
     User getUserByUserName(String username);
+    
+    /***
+       *@autohr Lengjx
+       *@Description 分页查询所有用户数据
+       *@Date 2018-09-29 13:57
+       *@Param [currentPage, pageSize]
+       *@return java.util.List<www.coolcat.club.domain.User> 
+    **/
+    PageInfo findItemByPage(int currentPage, int pageSize);
+    
 
 }

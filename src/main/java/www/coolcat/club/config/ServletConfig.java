@@ -12,7 +12,6 @@ import org.springframework.core.annotation.Order;
 public class ServletConfig extends SpringBootServletInitializer {
 
     @Bean
-    @Order
     public ServletRegistrationBean statViewServlet() {
         StatViewServlet servlet = new StatViewServlet();
         ServletRegistrationBean bean = new ServletRegistrationBean(servlet, "/druid/*");

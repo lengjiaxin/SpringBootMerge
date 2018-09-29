@@ -1,10 +1,11 @@
 package www.coolcat.club.config;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInterceptor;
+import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
-import org.omg.PortableInterceptor.Interceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,18 +23,6 @@ public class MyBatisConfig {
     @Autowired
     private DruidConfiguration druidConfig;
 
-    //配置mybatis的分页插件pageHelper
-    @Bean
-    public PageHelper pageHelper(){
-        PageHelper pageHelper = new PageHelper();
-        Properties properties = new Properties();
-        properties.setProperty("offsetAsPageNum","true");
-        properties.setProperty("rowBoundsWithCount","true");
-        properties.setProperty("reasonable","true");
-        properties.setProperty("dialect","mysql");    //配置mysql数据库的方言
-        pageHelper.setProperties(properties);
-        return pageHelper;
-    }
     @Bean
     public SqlSessionFactory sqlSessionFactoryBean() throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
@@ -42,6 +31,17 @@ public class MyBatisConfig {
         //添加XML目录
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         try {
+            //@SpringBootApplication(exclude = PageHelperAutoConfiguration.class) 默认已经加载
+            //配置mybatis的分页插件pageHelper
+           /* Properties properties = new Properties();
+            properties.setProperty("helperDialect", "mysql");
+            properties.setProperty("offsetAsPageNum", "true");
+            properties.setProperty("rowBoundsWithCount", "true");
+            properties.setProperty("reasonable", "true");
+            Interceptor interceptor = new PageInterceptor();
+            interceptor.setProperties(properties);
+            sqlSessionFactoryBean.setPlugins(new Interceptor[] {interceptor});
+            */
             sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:mapper/*.xml"));
             sqlSessionFactoryBean.setConfigLocation(resolver.getResource("classpath:configuration.xml"));
             return sqlSessionFactoryBean.getObject();

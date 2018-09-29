@@ -6,18 +6,27 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @Configuration
 public class Swagger2 {
     @Bean
     public Docket createRestApi() {
+        List<SecurityScheme> list = new ArrayList<>();
+        list.add(new ApiKey("access_token", "access_token", "query"));
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("www.coolcat.club"))
                 .paths(PathSelectors.any())
-                .build();
+                .build()
+                .securitySchemes(list);
     }
 
     private ApiInfo apiInfo() {

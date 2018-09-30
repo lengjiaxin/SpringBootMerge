@@ -1,4 +1,4 @@
-package www.coolcat.club.domain;
+package www.coolcat.club.common;
 
 /**
  * @ClassName ResultCodeEnum

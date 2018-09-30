@@ -1,11 +1,6 @@
-package www.coolcat.club.domain;
+package www.coolcat.club.common;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
 
 /***
    *@autohr Lengjx

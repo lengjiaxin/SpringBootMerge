@@ -1,16 +1,18 @@
 package www.coolcat.club.shiro;
 
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.credential.CredentialsMatcher;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import www.coolcat.club.domain.User;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @ClassName MyShiroRealm
@@ -19,6 +21,7 @@ import java.util.Set;
  * @Date 2018-09-25 15:13
  * @Version 1.0
  **/
+@Component
 public class MyAuthorizingRealm extends AuthorizingRealm {
 
     //用于用户查询
@@ -33,37 +36,43 @@ public class MyAuthorizingRealm extends AuthorizingRealm {
      * @return 返回封装了用户信息的 AuthenticationInfo 实例
      */
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        System.out.println("————身份认证方法————");
-        UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-        // 从数据库获取对应用户名密码的用户
-        String password = "";//userMapper.getPassword(token.getUsername());
-        if (null == password) {
-            throw new AccountException("用户名不正确");
-        } else if (!password.equals(new String((char[]) token.getCredentials()))) {
-            throw new AccountException("密码不正确");
-        }
-        return new SimpleAuthenticationInfo(token.getPrincipal(), password, getName());
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+
+        List<String> permsList;
+        //用户权限列表
+        Set<String> permsSet = new HashSet<>();
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        info.setStringPermissions(permsSet);
+        return info;
     }
 
     /**
-     * 获取授权信息
-     *
-     * @param principalCollection
-     * @return
+     * 认证(登录时调用)
      */
     @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        System.out.println("————权限认证————");
-        String username = (String) SecurityUtils.getSubject().getPrincipal();
-        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        //获得该用户角色
-        String role = "";//userMapper.getRole(username);
-        Set<String> set = new HashSet<>();
-        //需要将 role 封装到 Set 作为 info.setRoles() 的参数
-        set.add(role);
-        //设置该用户拥有的角色
-        info.setRoles(set);
+    protected AuthenticationInfo doGetAuthenticationInfo(
+            AuthenticationToken authcToken) throws AuthenticationException {
+        UsernamePasswordToken token = (UsernamePasswordToken)authcToken;
+
+        //查询用户信息
+        User user = new User();
+        user.setName(token.getUsername());
+        //user = sysUserDao.selectOne(user);
+
+        //账号不存在
+        if(user == null) {
+            throw new UnknownAccountException("账号或密码不正确");
+        }
+
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, user.getPassword(), ByteSource.Util.bytes(user.getId()), getName());
         return info;
+    }
+
+    @Override
+    public void setCredentialsMatcher(CredentialsMatcher credentialsMatcher) {
+        HashedCredentialsMatcher shaCredentialsMatcher = new HashedCredentialsMatcher();
+        shaCredentialsMatcher.setHashAlgorithmName(ShiroUtils.hashAlgorithmName);
+        shaCredentialsMatcher.setHashIterations(ShiroUtils.hashIterations);
+        super.setCredentialsMatcher(shaCredentialsMatcher);
     }
 }

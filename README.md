@@ -1,7 +1,7 @@
 # SpringBootMerge
  SpringBoot+MySql+Redis+Swagger+Mybatis+Druid整合
-### Swagger http://127.0.0.1:8080/swagger-ui.html
-### Druid   http://127.0.0.1:8080/druid/sql.html
+### Swagger http://127.0.0.1:8081/swagger-ui.html
+### Druid   http://127.0.0.1:8081/druid/sql.html
 
 1. 使用IntelliJ IDEA菜单建立本地Git仓库: VCS -> Import into Version Control -> Create Git Repository；
 2. 在弹出的的窗口中选择当前项目；

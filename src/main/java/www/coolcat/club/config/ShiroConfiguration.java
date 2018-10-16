@@ -23,7 +23,7 @@ import java.util.Map;
  * @Date 2018-09-25 15:11
  * @Version 1.0
  **/
-@Configuration
+//@Configuration
 public class ShiroConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(ShiroConfiguration.class);

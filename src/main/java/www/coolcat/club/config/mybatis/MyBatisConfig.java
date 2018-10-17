@@ -1,8 +1,5 @@
-package www.coolcat.club.config;
+package www.coolcat.club.config.mybatis;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInterceptor;
-import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -12,8 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-
-import java.util.Properties;
+import www.coolcat.club.config.druid.DruidConfiguration;
 
 // mapper 接口类扫描包配置
 @MapperScan("www.coolcat.club.dao")

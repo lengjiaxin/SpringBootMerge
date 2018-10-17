@@ -1,4 +1,4 @@
-package www.coolcat.club.config;
+package www.coolcat.club.config.redis;
 
 /**
  * @ClassName CacheConfig

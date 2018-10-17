@@ -1,4 +1,4 @@
-package www.coolcat.club.config;
+package www.coolcat.club.config.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

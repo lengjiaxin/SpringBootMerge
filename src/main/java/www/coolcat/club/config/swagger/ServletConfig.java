@@ -1,4 +1,4 @@
-package www.coolcat.club.config;
+package www.coolcat.club.config.swagger;
 
 import com.alibaba.druid.support.http.StatViewServlet;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -6,7 +6,6 @@ import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 
 @Configuration
 public class ServletConfig extends SpringBootServletInitializer {
@@ -15,6 +14,9 @@ public class ServletConfig extends SpringBootServletInitializer {
     public ServletRegistrationBean statViewServlet() {
         StatViewServlet servlet = new StatViewServlet();
         ServletRegistrationBean bean = new ServletRegistrationBean(servlet, "/druid/*");
+        ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean(new StatViewServlet(), "/druid/*");
+        servletRegistrationBean.addInitParameter("loginUsername","admin");
+        servletRegistrationBean.addInitParameter("loginPassword","123456");
         return bean;
     }
 

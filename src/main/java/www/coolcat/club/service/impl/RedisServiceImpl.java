@@ -3,21 +3,22 @@ package www.coolcat.club.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
+import www.coolcat.club.service.RedisService;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @ClassName RedisService
- * @Description
- * @Author Lengjx
- * @Date 2018-09-14 16:33
- * @Version 1.0
- **/
+/***
+   *@autohr Lengjx
+   *@Description  redis工具类
+   *@Date 2018-11-08 10:14
+   *@Param
+   *@return
+**/
 @Service
-public class RedisServiceImpl {
+public class RedisServiceImpl implements RedisService {
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -28,6 +29,7 @@ public class RedisServiceImpl {
      * @param value
      * @return
      */
+    @Override
     public boolean set(final String key, Object value) {
         boolean result = false;
         try {
@@ -47,6 +49,7 @@ public class RedisServiceImpl {
      * @param value
      * @return
      */
+    @Override
     public boolean set(final String key, Object value, Long expireTime) {
         boolean result = false;
         try {
@@ -65,6 +68,7 @@ public class RedisServiceImpl {
      *
      * @param keys
      */
+    @Override
     public void remove(final String... keys) {
         for (String key : keys) {
             remove(key);
@@ -76,6 +80,7 @@ public class RedisServiceImpl {
      *
      * @param pattern
      */
+    @Override
     public void removePattern(final String pattern) {
         Set<Serializable> keys = redisTemplate.keys(pattern);
         if (keys.size() > 0)
@@ -87,6 +92,7 @@ public class RedisServiceImpl {
      *
      * @param key
      */
+    @Override
     public void remove(final String key) {
         if (exists(key)) {
             redisTemplate.delete(key);
@@ -99,6 +105,7 @@ public class RedisServiceImpl {
      * @param key
      * @return
      */
+    @Override
     public boolean exists(final String key) {
         return redisTemplate.hasKey(key);
     }
@@ -109,6 +116,7 @@ public class RedisServiceImpl {
      * @param key
      * @return
      */
+    @Override
     public Object get(final String key) {
         Object result = null;
         ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
@@ -123,6 +131,7 @@ public class RedisServiceImpl {
      * @param hashKey
      * @param value
      */
+    @Override
     public void hmSet(String key, Object hashKey, Object value) {
         HashOperations<String, Object, Object> hash = redisTemplate.opsForHash();
         hash.put(key, hashKey, value);
@@ -135,6 +144,7 @@ public class RedisServiceImpl {
      * @param hashKey
      * @return
      */
+    @Override
     public Object hmGet(String key, Object hashKey) {
         HashOperations<String, Object, Object> hash = redisTemplate.opsForHash();
         return hash.get(key, hashKey);
@@ -146,6 +156,7 @@ public class RedisServiceImpl {
      * @param k
      * @param v
      */
+    @Override
     public void lPush(String k, Object v) {
         ListOperations<String, Object> list = redisTemplate.opsForList();
         list.rightPush(k, v);
@@ -159,6 +170,7 @@ public class RedisServiceImpl {
      * @param l1
      * @return
      */
+    @Override
     public List<Object> lRange(String k, long l, long l1) {
         ListOperations<String, Object> list = redisTemplate.opsForList();
         return list.range(k, l, l1);
@@ -170,6 +182,7 @@ public class RedisServiceImpl {
      * @param key
      * @param value
      */
+    @Override
     public void add(String key, Object value) {
         SetOperations<String, Object> set = redisTemplate.opsForSet();
         set.add(key, value);
@@ -181,6 +194,7 @@ public class RedisServiceImpl {
      * @param key
      * @return
      */
+    @Override
     public Set<Object> setMembers(String key) {
         SetOperations<String, Object> set = redisTemplate.opsForSet();
         return set.members(key);
@@ -193,6 +207,7 @@ public class RedisServiceImpl {
      * @param value
      * @param scoure
      */
+    @Override
     public void zAdd(String key, Object value, double scoure) {
         ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
         zset.add(key, value, scoure);
@@ -206,6 +221,7 @@ public class RedisServiceImpl {
      * @param scoure1
      * @return
      */
+    @Override
     public Set<Object> rangeByScore(String key, double scoure, double scoure1) {
         ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
         return zset.rangeByScore(key, scoure, scoure1);
